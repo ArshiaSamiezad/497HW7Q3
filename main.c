@@ -469,11 +469,12 @@ int main()
                 printf("You don't have access to delete this course!\n");
             }
 
-            else if (loginLevel != 1)
+            else if (loginLevel == 2)
             {
 
                 for (int i = 0; i < mstr[loginMasterIndex]->numCourses; i++)
                 {
+                    inputList[1][strlen(inputList[1]) - 1] = '\0';
                     if (strcmp(mstr[loginMasterIndex]->courseName[i], inputList[1]) == 0)
                     {
                         for (int j = 0; j < depIndex; j++)
