@@ -36,6 +36,7 @@ struct student
     char masterLastName[100][100];
     int masterID[100];
     int credit[100];
+    int totalCredit;
     int numCourses;
 
     char passCourseName[100][100];
@@ -154,6 +155,7 @@ int main()
                 std[stdIndex]->ID = strtol(inputList[3], NULL, 10);
                 std[stdIndex]->depID = strtol(inputList[4], NULL, 10);
                 std[stdIndex]->passNumCourses = 0;
+                std[stdIndex]->totalCredit = 0;
                 // inja badan check konam ke age dep vojood nadasht error bede ya na
                 for (int i = 0; i < depIndex; i++)
                 {
@@ -634,6 +636,63 @@ int main()
                 printf("%s %s %.2f\n", std[indexgpa3]->firstName, std[indexgpa3]->lastName, gpa3);
                 printf("%s %s %.2f\n", std[indexgpa4]->firstName, std[indexgpa4]->lastName, gpa4);
                 printf("%s %s %.2f\n", std[indexgpa5]->firstName, std[indexgpa5]->lastName, gpa5);
+            }
+        }
+
+        else if (strncmp(inputCpy, "add-s", 5))
+        {
+            if (loginLevel != 1)
+            {
+                printf("You should login as a student to add course!\n");
+            }
+            else
+            {
+                if (index < 4)
+                {
+                    printf("Invalid inputs!\n");
+                }
+                else
+                {
+                    int doesntExist = 1;
+                    for (int i = 0; i < depIndex; i++)
+                    {
+                        for (int j = 0; j < dp[i]->numCourses; j++)
+                        {
+                            if ((strcmp(inputList[1], dp[i]->courseName[j]) == 0) && (strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0) && (strcmp(inputList[3], dp[i]->masterLastName[j]) == 0))
+                            {
+                                int passedPreend = 0;
+                                int passedBefore = 0;
+                                for (int k = 0; k < std[loginStudentIndex]->passNumCourses; k++)
+                                {
+                                    // if(strcmp())
+                                }
+                                if (dp[i]->registered[j] >= dp[i]->capacity[j])
+                                {
+                                    printf("The capacity of course is full!\n");
+                                }
+
+                                else if (std[loginStudentIndex]->totalCredit + dp[i]->credit[j] > 24)
+                                {
+                                    printf("You've reached the limit of taking courses!\n");
+                                }
+                                else
+                                {
+                                    strcpy(inputList[1], std[loginStudentIndex]->courseName);
+                                    strcpy(inputList[2], std[loginStudentIndex]->masterFirstName);
+                                    strcpy(inputList[3], std[loginStudentIndex]->masterLastName);
+                                    std[loginStudentIndex]->totalCredit += dp[i]->credit[j];
+                                    dp[i]->registered[j]++;
+                                }
+                                i = depIndex;
+                                break;
+                            }
+                        }
+                    }
+                    if (doesntExist)
+                    {
+                        printf("No course exists with given name and master!\n");
+                    }
+                }
             }
         }
 
