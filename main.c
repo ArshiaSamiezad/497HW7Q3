@@ -494,8 +494,8 @@ int main()
                                         strcpy(dp[j]->masterFirstName[l], dp[j]->masterFirstName[l + 1]);
                                         strcpy(dp[j]->masterLastName[l], dp[j]->masterLastName[l + 1]);
                                         dp[j]->masterID[l] = dp[j]->masterID[l + 1];
-                                        doesntExist = 0;
                                     }
+                                    doesntExist = 0;
                                     dp[j]->numCourses--;
                                     break;
                                 }
@@ -517,8 +517,8 @@ int main()
                                         strcpy(dp[j]->masterFirstName[l], dp[j]->masterFirstName[l + 1]);
                                         strcpy(dp[j]->masterLastName[l], dp[j]->masterLastName[l + 1]);
                                         dp[j]->masterID[l] = dp[j]->masterID[l + 1];
-                                        doesntExist = 0;
                                     }
+                                    doesntExist = 0;
                                     dp[i]->numCourses--;
                                 }
                             }
@@ -554,10 +554,11 @@ int main()
                                 strcpy(dp[i]->masterFirstName[k], dp[i]->masterFirstName[k + 1]);
                                 strcpy(dp[i]->masterLastName[k], dp[i]->masterLastName[k + 1]);
                                 dp[i]->masterID[k] = dp[i]->masterID[k + 1];
-                                doesntExist = 0;
-                                printf("Course deleted successfully!\n");
                             }
+                            doesntExist = 0;
                             dp[i]->numCourses--;
+                            i = depIndex;
+                            printf("Course deleted successfully!\n");
                         }
                     }
                 }
