@@ -42,7 +42,7 @@ struct student
     int passMark[100];
     int passCredit[100];
     int passNumCourses;
-    int gpa;
+    float gpa;
 };
 
 struct master
@@ -198,7 +198,7 @@ int main()
                     sumpassCredits += std[stdIndex]->passCredit[i];
                     sumpassMarks += std[stdIndex]->passMark[i] * std[stdIndex]->passCredit[i];
                 }
-                std[stdIndex]->gpa = (sumpassMarks) / (sumpassCredits);
+                std[stdIndex]->gpa = (float)(sumpassMarks) / (float)(sumpassCredits);
                 printf("Registered successfully!\n");
                 stdIndex++;
             }
@@ -493,7 +493,7 @@ int main()
                                         strcpy(dp[j]->masterFirstName[l], dp[j]->masterFirstName[l + 1]);
                                         strcpy(dp[j]->masterLastName[l], dp[j]->masterLastName[l + 1]);
                                         dp[j]->masterID[l] = dp[j]->masterID[l + 1];
-                                        doesntExist = 0;ش
+                                        doesntExist = 0;
                                     }
                                     dp[i]->numCourses--;
                                     break;
@@ -599,6 +599,15 @@ int main()
                 printf("%s %s %.2f\n", std[indexgpa5]->firstName, std[indexgpa5]->lastName, gpa5);
             }
         }
+
+        // delete_course-master
+        else if ((strncmp(inputCpy, "delete_course", 13) == 0) && loginLevel == 2)
+        {
+        }
+
+        else
+            printf("Invalid command!\n");
+
         fgets(input, 1000, stdin);
         strcpy(inputCpy, input);
     }
