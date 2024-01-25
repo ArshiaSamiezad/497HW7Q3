@@ -39,8 +39,8 @@ struct student
     int numCourses;
 
     char passCourseName[100][100];
-    int passMark[100];
-    int passCredit[100];
+    float passMark[100];
+    float passCredit[100];
     int passNumCourses;
     float gpa;
 };
@@ -184,12 +184,12 @@ int main()
                     token[indexStud] = '\0';
 
                     strcpy(std[stdIndex]->passCourseName[std[stdIndex]->passNumCourses], token[0]);
-                    std[stdIndex]->passMark[std[stdIndex]->passNumCourses] = strtol(token[1], NULL, 10);
+                    std[stdIndex]->passMark[std[stdIndex]->passNumCourses] = atof(token[1]);
                     std[stdIndex]->passCredit[std[stdIndex]->passNumCourses] = strtol(token[2], NULL, 10);
 
                     std[stdIndex]->passNumCourses++;
-                    strcpy(inputCpy, input);
                     fgets(input, 1000, stdin);
+                    strcpy(inputCpy, input);
                 }
                 float sumpassCredits = 0;
                 float sumpassMarks = 0;
@@ -315,7 +315,7 @@ int main()
             {
                 for (int i = 0; i < std[loginStudentIndex]->passNumCourses; i++)
                 {
-                    printf("%d Course: %s , Grade: %d\n", i + 1, std[loginStudentIndex]->passCourseName[i], std[loginStudentIndex]->passMark[i]);
+                    printf("%d Course: %s , Grade: %.2f\n", i + 1, std[loginStudentIndex]->passCourseName[i], std[loginStudentIndex]->passMark[i]);
                 }
             }
         }
@@ -607,7 +607,7 @@ int main()
 
         else
             printf("Invalid command!\n");
-
+        // printf("previous input was %s. waiting to new input\n", input);
         fgets(input, 1000, stdin);
         strcpy(inputCpy, input);
     }
