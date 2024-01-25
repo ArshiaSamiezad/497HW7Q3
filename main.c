@@ -600,7 +600,7 @@ int main()
             }
         }
 
-        // delete_course-master
+        // delete_course master
         else if ((strncmp(inputCpy, "delete_course", 13) == 0) && loginLevel == 2)
         {
         }
