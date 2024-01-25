@@ -92,7 +92,7 @@ int main()
     int loginDepIndex;
     int loginMasterIndex;
 
-    while (strcmp(input, "exit\n"))
+    while (strncmp(input, "exit", 4))
     {
         char *inputList[1000];
 
@@ -496,7 +496,7 @@ int main()
                                         dp[j]->masterID[l] = dp[j]->masterID[l + 1];
                                         doesntExist = 0;
                                     }
-                                    dp[i]->numCourses--;
+                                    dp[j]->numCourses--;
                                     break;
                                 }
                             }
@@ -524,6 +524,41 @@ int main()
                             }
                         }
                         printf("Course deleted successfully!\n");
+                    }
+                }
+            }
+            else if (loginLevel == 3)
+            {
+                doesntExist = 1;
+                inputList[3][strlen(inputList[3]) - 1] = '\0';
+                for (int i = 0; i < depIndex; i++)
+                {
+                    for (int j = 0; j < dp[i]->numCourses; i++)
+                    {
+                        if ((strcmp(dp[i]->courseName[j], inputList[1]) == 0) && (strcmp(dp[i]->masterFirstName[j], inputList[2]) == 0) && (strcmp(dp[i]->masterLastName[j], inputList[3]) == 0))
+                        {
+                            if (i != loginDepIndex)
+                            {
+                                printf("You can't delete another department's course!\n");
+                                i = depIndex;
+                                break;
+                            }
+                            for (int k = j; j < dp[i]->numCourses - 1; k++)
+                            {
+                                strcpy(dp[i]->courseName[k], dp[i]->courseName[k + 1]);
+                                strcpy(dp[i]->coursePreend[k], dp[i]->coursePreend[k + 1]);
+                                dp[i]->credit[k] = dp[i]->credit[k + 1];
+                                dp[i]->capacity[k] = dp[i]->capacity[k + 1];
+                                dp[i]->registered[k] = dp[i]->registered[k + 1];
+
+                                strcpy(dp[i]->masterFirstName[k], dp[i]->masterFirstName[k + 1]);
+                                strcpy(dp[i]->masterLastName[k], dp[i]->masterLastName[k + 1]);
+                                dp[i]->masterID[k] = dp[i]->masterID[k + 1];
+                                doesntExist = 0;
+                                printf("Course deleted successfully!\n");
+                            }
+                            dp[i]->numCourses--;
+                        }
                     }
                 }
             }
@@ -599,11 +634,6 @@ int main()
                 printf("%s %s %.2f\n", std[indexgpa4]->firstName, std[indexgpa4]->lastName, gpa4);
                 printf("%s %s %.2f\n", std[indexgpa5]->firstName, std[indexgpa5]->lastName, gpa5);
             }
-        }
-
-        // delete_course master
-        else if ((strncmp(inputCpy, "delete_course", 13) == 0) && loginLevel == 2)
-        {
         }
 
         else
