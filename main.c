@@ -106,6 +106,7 @@ int main()
         }
         inputList[index] = '\0';
         // printf("%d %s %s\n", index, inputList[0], inputList[1]);
+        inputList[index - 1][strlen(inputList[index - 1]) - 1] = '\0';
 
         // register department
         if (strncmp(inputCpy, "register-d", 10) == 0)
@@ -509,22 +510,26 @@ int main()
                             {
                                 if (strcmp(std[j]->courseName[k], inputList[1]) == 0)
                                 {
+                                    doesntExist = 0;
+                                    std[j]->numCourses--;
+                                    std[j]->totalCredit-=std[j]->credit[k];
                                     for (int l = k; l < std[j]->numCourses - 1; l++)
                                     {
                                         strcpy(std[j]->courseName[l], std[j]->courseName[l + 1]);
                                         std[j]->credit[l] = std[j]->credit[l + 1];
-                                        dp[j]->capacity[l] = dp[j]->capacity[l + 1];
-                                        dp[j]->registered[l] = dp[j]->registered[l + 1];
 
-                                        strcpy(dp[j]->masterFirstName[l], dp[j]->masterFirstName[l + 1]);
-                                        strcpy(dp[j]->masterLastName[l], dp[j]->masterLastName[l + 1]);
-                                        dp[j]->masterID[l] = dp[j]->masterID[l + 1];
+                                        strcpy(std[j]->masterFirstName[l], std[j]->masterFirstName[l + 1]);
+                                        strcpy(std[j]->masterLastName[l], std[j]->masterLastName[l + 1]);
+                                        std[j]->masterID[l] = std[j]->masterID[l + 1];
                                     }
-                                    doesntExist = 0;
-                                    dp[i]->numCourses--;
                                 }
                             }
                         }
+                        for(int j=i;j<mstr[loginMasterIndex]->numCourses-1;j++){
+                            mstr[loginMasterIndex]->depID[j]=mstr[loginMasterIndex]->depID[j+1];
+                            strcpy(mstr[loginMasterIndex]->courseName[j],mstr[loginMasterIndex]->courseName[j+1]);
+                        }
+                        mstr[loginMasterIndex]->numCourses--;
                         printf("Course deleted successfully!\n");
                     }
                 }
@@ -639,7 +644,8 @@ int main()
             }
         }
 
-        else if (strncmp(inputCpy, "add-s", 5))
+        // add course student
+        else if (strncmp(inputCpy, "add-s", 5) == 0)
         {
             if (loginLevel != 1)
             {
@@ -658,14 +664,43 @@ int main()
                     {
                         for (int j = 0; j < dp[i]->numCourses; j++)
                         {
+                            printf("j is %d\ninputList[1] is %s and dp[%d]->courseName[%d] is %s\n", j, inputList[1], i, j, dp[i]->courseName[j]);
+                            printf("inputList[2] is %s and dp[%d]->masterFirstName[%d] is %s\n", inputList[2], i, j, dp[i]->masterFirstName[j]);
+                            printf("inputList[3] is %s and dp[%d]->masterLastName[%d] is %s\n", inputList[3], i, j, dp[i]->masterLastName[j]);
                             if ((strcmp(inputList[1], dp[i]->courseName[j]) == 0) && (strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0) && (strcmp(inputList[3], dp[i]->masterLastName[j]) == 0))
                             {
-                                int passedPreend = 0;
-                                int passedBefore = 0;
+                                int haveThisCourse = 0;
+                                for (int k = 0; k < std[loginStudentIndex]->numCourses; k++)
+                                {
+                                    if (strcmp(inputList[1], std[loginStudentIndex]->courseName[k]) == 0)
+                                    {
+                                        printf("You already have this course!\n");
+                                        i = depIndex;
+                                        break;
+                                    }
+                                }
+                                if (haveThisCourse)
+                                {
+                                    doesntExist = 0;
+                                    break;
+                                }
+
+                                int preendPassed = 0;
                                 for (int k = 0; k < std[loginStudentIndex]->passNumCourses; k++)
                                 {
-                                    // if(strcmp())
+                                    if (strcmp(std[loginStudentIndex]->passCourseName[k], dp[i]->coursePreend[j]) == 0)
+                                    {
+                                        preendPassed = 1;
+                                    }
                                 }
+                                if (preendPassed == 0)
+                                {
+                                    printf("You haven't passed preneeded courses yet!\n");
+                                    i = depIndex;
+                                    doesntExist = 0;
+                                    break;
+                                }
+
                                 if (dp[i]->registered[j] >= dp[i]->capacity[j])
                                 {
                                     printf("The capacity of course is full!\n");
@@ -677,9 +712,9 @@ int main()
                                 }
                                 else
                                 {
-                                    strcpy(inputList[1], std[loginStudentIndex]->courseName);
-                                    strcpy(inputList[2], std[loginStudentIndex]->masterFirstName);
-                                    strcpy(inputList[3], std[loginStudentIndex]->masterLastName);
+                                    strcpy(std[loginStudentIndex]->courseName[j], inputList[1]);
+                                    strcpy(std[loginStudentIndex]->masterFirstName[j], inputList[2]);
+                                    strcpy(std[loginStudentIndex]->masterLastName[j], inputList[3]);
                                     std[loginStudentIndex]->totalCredit += dp[i]->credit[j];
                                     dp[i]->registered[j]++;
                                 }
@@ -695,7 +730,6 @@ int main()
                 }
             }
         }
-
         else
             printf("Invalid command!\n");
         // printf("previous input was %s. waiting to new input\n", input);
