@@ -766,6 +766,7 @@ int main()
                                     strcpy(std[loginStudentIndex]->masterFirstName[j], inputList[2]);
                                     strcpy(std[loginStudentIndex]->masterLastName[j], inputList[3]);
                                     std[loginStudentIndex]->totalCredit += dp[i]->credit[j];
+                                    std[loginStudentIndex]->numCourses++;
                                     dp[i]->registered[j]++;
                                     printf("You're added to course successfully!\n");
                                 }
@@ -783,7 +784,7 @@ int main()
         }
 
         // remove-s
-        else if (strncmp(inputCpy, "remove-s", 8))
+        else if (strncmp(inputCpy, "remove-s", 8)==0)
         {
             if (loginLevel != 1)
             {
@@ -808,9 +809,10 @@ int main()
                 int courseIndex;
                 for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
                 {
-                    if (strcmp(std[loginStudentIndex]->courseName[i], inputList[1]))
+                    //printf("std[%d] courseName[%d] is %s and inputList[1] is %s\n",loginStudentIndex,i,std[loginStudentIndex]->courseName[i],inputList[1]);
+                    if (strcmp(std[loginStudentIndex]->courseName[i], inputList[1]) == 0)
                     {
-                        alreadyHave = 1;
+                        isPassing = 1;
                         courseIndex = i;
                         break;
                     }
