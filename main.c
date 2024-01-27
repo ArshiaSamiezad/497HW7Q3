@@ -539,7 +539,7 @@ int main()
             }
             else if (loginLevel == 3)
             {
-                isInAnotherDep=0;
+                isInAnotherDep = 0;
                 doesntExist = 1;
                 inputList[3][strlen(inputList[3]) - 1] = '\0';
                 for (int i = 0; i < depIndex; i++)
@@ -602,7 +602,7 @@ int main()
                         {
                             for (int j = 0; j < mstr[i]->numCourses; j++)
                             {
-                                if (strcmp(mstr[i]->courseName[j],inputList[1]) == 0)
+                                if (strcmp(mstr[i]->courseName[j], inputList[1]) == 0)
                                 {
                                     for (int k = j; k < mstr[i]->numCourses - 1; k++)
                                     {
@@ -713,13 +713,13 @@ int main()
                     {
                         for (int j = 0; j < dp[i]->numCourses; j++)
                         {
-                            //printf("j is %d\ninputList[1] is %s and dp[%d]->courseName[%d] is %s\n and strcmp is %d\n", j, inputList[1], i, j, dp[i]->courseName[j],strcmp(inputList[1],dp[i]->courseName[j]));
-                            //printf("inputList[2] is %s and dp[%d]->masterFirstName[%d] is %s\n and strcmp is %d\n", inputList[2], i, j, dp[i]->masterFirstName[j],strcmp(inputList[2],dp[i]->masterFirstName[j]));
-                            //printf("inputList[3] is %s and dp[%d]->masterLastName[%d] is %s\n and strcmp is %d\n", inputList[3], i, j, dp[i]->masterLastName[j],strcmp(inputList[3],dp[i]->masterLastName[j]));
+                            // printf("j is %d\ninputList[1] is %s and dp[%d]->courseName[%d] is %s\n and strcmp is %d\n", j, inputList[1], i, j, dp[i]->courseName[j],strcmp(inputList[1],dp[i]->courseName[j]));
+                            // printf("inputList[2] is %s and dp[%d]->masterFirstName[%d] is %s\n and strcmp is %d\n", inputList[2], i, j, dp[i]->masterFirstName[j],strcmp(inputList[2],dp[i]->masterFirstName[j]));
+                            // printf("inputList[3] is %s and dp[%d]->masterLastName[%d] is %s\n and strcmp is %d\n", inputList[3], i, j, dp[i]->masterLastName[j],strcmp(inputList[3],dp[i]->masterLastName[j]));
                             if ((strcmp(inputList[1], dp[i]->courseName[j]) == 0) && (strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0) && (strcmp(inputList[3], dp[i]->masterLastName[j]) == 0))
                             {
                                 int haveThisCourse = 0;
-                                doesntExist=0;
+                                doesntExist = 0;
                                 for (int k = 0; k < std[loginStudentIndex]->numCourses; k++)
                                 {
                                     if (strcmp(inputList[1], std[loginStudentIndex]->courseName[k]) == 0)
@@ -782,61 +782,74 @@ int main()
             }
         }
 
-        //remove-s
-        else if(strncmp(inputCpy,"remove-s",8)){
-            if(loginLevel!=1){
+        // remove-s
+        else if (strncmp(inputCpy, "remove-s", 8))
+        {
+            if (loginLevel != 1)
+            {
                 printf("You should login as a student to remove course!\n");
             }
-            else if(index<2){
+            else if (index < 2)
+            {
                 printf("Invalid inputs!\n");
             }
-            else{
-                int isPassed=0;
-                for(int i=0;i<std[loginStudentIndex]->passNumCourses;i++){
-                    if(strcmp(std[loginStudentIndex]->passCourseName[i],inputList[1])==0){
-                        isPassed=1;
+            else
+            {
+                int isPassed = 0;
+                for (int i = 0; i < std[loginStudentIndex]->passNumCourses; i++)
+                {
+                    if (strcmp(std[loginStudentIndex]->passCourseName[i], inputList[1]) == 0)
+                    {
+                        isPassed = 1;
                         break;
                     }
                 }
-                int isPassing=0;
+                int isPassing = 0;
                 int courseIndex;
-                for(int i=0;i<std[loginStudentIndex]->numCourses;i++){
-                    if(strcmp(std[loginStudentIndex]->courseName[i],inputList[1])){
-                        alreadyHave=1;
-                        courseIndex=i;
+                for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
+                {
+                    if (strcmp(std[loginStudentIndex]->courseName[i], inputList[1]))
+                    {
+                        alreadyHave = 1;
+                        courseIndex = i;
                         break;
                     }
                 }
-                if(isPassed){
+                if (isPassed)
+                {
                     printf("You have already had this course!\n");
                 }
-                else if(isPassing==0){
+                else if (isPassing == 0)
+                {
                     printf("You don't belong to the student list of given course!\n");
                 }
-                else{
-                    for(int i=0;i<depIndex;i++){
-                        for(int j=0;j<dp[i]->numCourses;j++){
-                            if(strcmp(std[loginStudentIndex]->courseName[courseIndex],dp[i]->courseName[j])==0 && strcmp(std[loginStudentIndex]->masterFirstName[courseIndex],dp[i]->masterFirstName[j])==0 && strcmp(std[loginStudentIndex]->masterLastName[courseIndex],dp[i]->masterLastName[j])==0){
+                else
+                {
+                    for (int i = 0; i < depIndex; i++)
+                    {
+                        for (int j = 0; j < dp[i]->numCourses; j++)
+                        {
+                            if (strcmp(std[loginStudentIndex]->courseName[courseIndex], dp[i]->courseName[j]) == 0 && strcmp(std[loginStudentIndex]->masterFirstName[courseIndex], dp[i]->masterFirstName[j]) == 0 && strcmp(std[loginStudentIndex]->masterLastName[courseIndex], dp[i]->masterLastName[j]) == 0)
+                            {
                                 dp[i]->registered[j]--;
-                                i=depIndex;
+                                i = depIndex;
                                 break;
                             }
                         }
                     }
-                    std[loginStudentIndex]->totalCredit-=std[loginStudentIndex]->credit[courseIndex];
-                    for(int i=courseIndex;i<std[loginStudentIndex]->numCourses-1;i++){
-                        strcpy(std[loginStudentIndex]->courseName[i],std[loginStudentIndex]->courseName[i+1]);
-                        strcpy(std[loginStudentIndex]->masterFirstName[i],std[loginStudentIndex]->masterFirstName[i+1]);
-                        strcpy(std[loginStudentIndex]->masterLastName[i],std[loginStudentIndex]->masterLastName[i+1]);
-                        std[loginStudentIndex]->masterID[i]=std[loginStudentIndex]->masterID[i+1];
-                        std[loginStudentIndex]->credit[i]=std[loginStudentIndex]->masterID[i+1];
+                    std[loginStudentIndex]->totalCredit -= std[loginStudentIndex]->credit[courseIndex];
+                    for (int i = courseIndex; i < std[loginStudentIndex]->numCourses - 1; i++)
+                    {
+                        strcpy(std[loginStudentIndex]->courseName[i], std[loginStudentIndex]->courseName[i + 1]);
+                        strcpy(std[loginStudentIndex]->masterFirstName[i], std[loginStudentIndex]->masterFirstName[i + 1]);
+                        strcpy(std[loginStudentIndex]->masterLastName[i], std[loginStudentIndex]->masterLastName[i + 1]);
+                        std[loginStudentIndex]->masterID[i] = std[loginStudentIndex]->masterID[i + 1];
+                        std[loginStudentIndex]->credit[i] = std[loginStudentIndex]->masterID[i + 1];
                     }
                     std[loginStudentIndex]->numCourses--;
 
-
                     printf("The course is removed from your chart successfully!\n");
                 }
-
             }
         }
 
