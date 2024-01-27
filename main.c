@@ -501,7 +501,7 @@ int main()
                                     doesntExist = 0;
 
                                     dp[j]->numCourses--;
-                                    //printf("dp[%d] numcourses is %d", j, dp[j]->numCourses);
+                                    // printf("dp[%d] numcourses is %d", j, dp[j]->numCourses);
                                     break;
                                 }
                             }
@@ -724,9 +724,13 @@ int main()
                                     if (strcmp(inputList[1], std[loginStudentIndex]->courseName[k]) == 0)
                                     {
                                         printf("You already have this course!\n");
-                                        i = depIndex;
+                                        i = depIndex + 1;
                                         break;
                                     }
+                                }
+                                if (i == depIndex + 1)
+                                {
+                                    break;
                                 }
                                 if (haveThisCourse)
                                 {
@@ -887,8 +891,19 @@ int main()
             }
         }
 
-        else
-            printf("Invalid command!\n");
+        // show-d-courses
+        else if (strncmp(inputCpy,"show-d-courses",14)){
+            if(loginLevel!=3){
+                printf("You should login as a departmnet to show depaertment courses!\n")
+            }
+            else{
+                for(int i=0;i<dp[loginDepIndex]->numCourses;i++){
+                    printf("%s %s %d\n",dp[loginDepIndex]->courseName[i],dp[loginDepIndex]->masterLastName,dp[loginDepIndex]->capacity[i]-dp[loginDepIndex]->registered[i]);
+                }
+            }
+        }
+
+            else printf("Invalid command!\n");
         // printf("previous input was %s. waiting to new input\n", input);
         fgets(input, 1000, stdin);
         strcpy(inputCpy, input);
