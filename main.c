@@ -541,7 +541,6 @@ int main()
             {
                 isInAnotherDep = 0;
                 doesntExist = 1;
-                inputList[3][strlen(inputList[3]) - 1] = '\0';
                 for (int i = 0; i < depIndex; i++)
                 {
                     for (int j = 0; j < dp[i]->numCourses; i++)
