@@ -892,18 +892,128 @@ int main()
         }
 
         // show-d-courses
-        else if (strncmp(inputCpy,"show-d-courses",14)){
-            if(loginLevel!=3){
-                printf("You should login as a departmnet to show depaertment courses!\n")
+        else if (strncmp(inputCpy, "show-d-courses", 14) == 0)
+        {
+            if (loginLevel != 3)
+            {
+                printf("You should login as a departmnet to show depaertment courses!\n");
             }
-            else{
-                for(int i=0;i<dp[loginDepIndex]->numCourses;i++){
-                    printf("%s %s %d\n",dp[loginDepIndex]->courseName[i],dp[loginDepIndex]->masterLastName,dp[loginDepIndex]->capacity[i]-dp[loginDepIndex]->registered[i]);
+            else
+            {
+                for (int i = 0; i < dp[loginDepIndex]->numCourses; i++)
+                {
+                    printf("%s %s %d\n", dp[loginDepIndex]->courseName[i], dp[loginDepIndex]->masterLastName, dp[loginDepIndex]->capacity[i] - dp[loginDepIndex]->registered[i]);
                 }
             }
         }
 
-            else printf("Invalid command!\n");
+        else if (strncmp(inputCpy, "give_course", 11) == 0)
+        {
+            if (loginLevel != 1)
+            {
+                printf("You should login as a student to give course to your friend!\n");
+            }
+            else
+            {
+                int giveCourseDepIndex = -1;
+                int giveCourseCourseIndex = -1;
+                int friendIndex = -1;
+                for (int i = 0; i < depIndex; i++)
+                {
+                    for (int j = 0; j < dp[i]->numCourses; j++)
+                    {
+                        if (strcmp(dp[i]->courseName[j], inputList[1]) == 0)
+                        {
+                            giveCourseCourseIndex = j;
+                            giveCourseDepIndex = i;
+                        }
+                    }
+                    for (int j = 0; j < dp[i]->passNumCourses; j++)
+                    {
+                        if (strcmp(dp[i]->passCourseName[j], inputList[1]) == 0)
+                        {
+                            giveCourseCourseIndex = j;
+                            giveCourseDepIndex = i;
+                        }
+                    }
+                }
+                for (int i = 0; i < stdIndex; i++)
+                {
+                    if (strcmp(std[i]->firstName, inputList[2]) == 0 && strcmp(std[i]->lastName, inputList[3]) == 0)
+                    {
+                        friendIndex = i;
+                        break;
+                    }
+                }
+                if (giveCourseCourseIndex == -1)
+                {
+                    printf("This course doesn't exist!\n");
+                }
+                else if (giveCourseCourseIndex != -1 && friendIndex == -1)
+                {
+                    printf("This person doesn't exist!\n");
+                }
+                else if (giveCourseCourseIndex != -1 && friendIndex != -1)
+                {
+                    int giveStudentPassIndex = -1;
+                    int giveStudentNowIndex = -1;
+                    for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
+                    {
+                        if (strcmp(inputList[1], std[loginStudentIndex]->courseName[i]) == 0)
+                        {
+                            giveStudentNowIndex = i;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < std[loginStudentIndex]->passNumCourses; i++)
+                    {
+                        if (strcmp(inputList[1], std[loginStudentIndex]->passCourseName[i]) == 0)
+                        {
+                            giveStudentPassIndex = i;
+                            break;
+                        }
+                    }
+                    if (giveStudentNowIndex == -1 && giveStudentPassIndex == -1)
+                    {
+                        printf("You don't belong to the student list of given course!\n");
+                    }
+                    else if (giveStudentNowIndex != -1)
+                    {
+                        int alreadyPassed = 0;
+                        for (int i = 0; i < std[friendIndex]->numCourses; i++)
+                        {
+                            if (strcmp(inputList[1], std[friendIndex]->courseName[i]) == 0)
+                            {
+                                alreadyPassed = 1;
+                            }
+                        }
+                        for (int i = 0; i < std[friendIndex]->passNumCourses; i++)
+                        {
+                            if (strcmp(inputList[1], std[friendIndex]->passCourseName[i]) == 0)
+                            {
+                                alreadyPassed = 1;
+                            }
+                        }
+                        if (alreadyPassed)
+                        {
+                            printf("This person has already have this course!\n");
+                        }
+                        else
+                        {
+                            for(int i=0;i<std[loginStudentIndex]->numCourses;i++){
+                                
+                            }
+                        }
+                    }
+                    // else if(giveStudentPassIndex!=-1){
+
+                    // }
+                }
+            }
+        }
+
+        else
+            printf("Invalid command!\n");
         // printf("previous input was %s. waiting to new input\n", input);
         fgets(input, 1000, stdin);
         strcpy(inputCpy, input);
