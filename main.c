@@ -79,7 +79,7 @@ int main()
     }
 
     int mstrIndex = 0;
-    struct student *mstr[100];
+    struct master *mstr[100];
     for (int i = 0; i < 100; i++)
     {
         mstr[i] = malloc(sizeof(struct master));
@@ -205,6 +205,7 @@ int main()
                 printf("Registered successfully!\n");
                 stdIndex++;
             }
+            printf("aaa\n");
         }
 
         // register master
@@ -445,7 +446,7 @@ int main()
                         dp[i]->masterID[dp[i]->numCourses] = loginID;
 
                         strcpy(mstr[loginMasterIndex]->courseName[mstr[loginMasterIndex]->numCourses], inputList[1]);
-                        mstr[loginMasterIndex]->depID = dp[i]->depID;
+                        mstr[loginMasterIndex]->depID[mstr[loginMasterIndex]->numCourses] = dp[i]->depID;
                         if (index > 5)
                         {
                             strcpy(dp[i]->coursePreend[dp[i]->numCourses], inputList[5]);
@@ -467,6 +468,7 @@ int main()
         else if (strncmp(inputCpy, "delete_course", 13) == 0)
         {
             int doesntExist = 1;
+            int isInAnotherDep = 0;
             if (loginLevel == 1)
             { // ya loginLevel!=2
                 printf("You don't have access to delete this course!\n");
@@ -537,8 +539,8 @@ int main()
             }
             else if (loginLevel == 3)
             {
+                isInAnotherDep=0;
                 doesntExist = 1;
-                int isInAnotherDep = 0;
                 inputList[3][strlen(inputList[3]) - 1] = '\0';
                 for (int i = 0; i < depIndex; i++)
                 {
@@ -600,7 +602,7 @@ int main()
                         {
                             for (int j = 0; j < mstr[i]->numCourses; j++)
                             {
-                                if (strcmp(mstr[i]->courseName[j]) == 0)
+                                if (strcmp(mstr[i]->courseName[j],inputList[1]) == 0)
                                 {
                                     for (int k = j; k < mstr[i]->numCourses - 1; k++)
                                     {
