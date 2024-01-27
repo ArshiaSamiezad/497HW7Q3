@@ -205,7 +205,6 @@ int main()
                 printf("Registered successfully!\n");
                 stdIndex++;
             }
-            printf("aaa\n");
         }
 
         // register master
@@ -479,7 +478,6 @@ int main()
 
                 for (int i = 0; i < mstr[loginMasterIndex]->numCourses; i++)
                 {
-                    inputList[1][strlen(inputList[1]) - 1] = '\0';
                     if (strcmp(mstr[loginMasterIndex]->courseName[i], inputList[1]) == 0)
                     {
                         for (int j = 0; j < depIndex; j++)
@@ -501,7 +499,9 @@ int main()
                                         dp[j]->masterID[l] = dp[j]->masterID[l + 1];
                                     }
                                     doesntExist = 0;
+
                                     dp[j]->numCourses--;
+                                    //printf("dp[%d] numcourses is %d", j, dp[j]->numCourses);
                                     break;
                                 }
                             }
@@ -784,7 +784,7 @@ int main()
         }
 
         // remove-s
-        else if (strncmp(inputCpy, "remove-s", 8)==0)
+        else if (strncmp(inputCpy, "remove-s", 8) == 0)
         {
             if (loginLevel != 1)
             {
@@ -809,7 +809,7 @@ int main()
                 int courseIndex;
                 for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
                 {
-                    //printf("std[%d] courseName[%d] is %s and inputList[1] is %s\n",loginStudentIndex,i,std[loginStudentIndex]->courseName[i],inputList[1]);
+                    // printf("std[%d] courseName[%d] is %s and inputList[1] is %s\n",loginStudentIndex,i,std[loginStudentIndex]->courseName[i],inputList[1]);
                     if (strcmp(std[loginStudentIndex]->courseName[i], inputList[1]) == 0)
                     {
                         isPassing = 1;
@@ -851,6 +851,39 @@ int main()
                     std[loginStudentIndex]->numCourses--;
 
                     printf("The course is removed from your chart successfully!\n");
+                }
+            }
+        }
+
+        else if (strncmp(inputCpy, "show-courses", 12) == 0)
+        {
+            if (index < 2)
+            {
+                printf("Invalid inputs!\n");
+            }
+            else
+            {
+                int foundDep = 0;
+                int depShowCourseIndex;
+                for (int i = 0; i < depIndex; i++)
+                {
+                    if (strtol(inputList[1], NULL, 10) == dp[i]->depID)
+                    {
+                        depShowCourseIndex = i;
+                        foundDep = 1;
+                        break;
+                    }
+                }
+                if (foundDep == 0)
+                {
+                    printf("This department code is invalid!\n");
+                }
+                else
+                {
+                    for (int i = 0; i < dp[depShowCourseIndex]->numCourses; i++)
+                    {
+                        printf("%s %s %d\n", dp[depShowCourseIndex]->courseName[i], dp[depShowCourseIndex]->masterLastName[i], dp[depShowCourseIndex]->capacity[i] - dp[depShowCourseIndex]->registered[i]);
+                    }
                 }
             }
         }
