@@ -713,12 +713,13 @@ int main()
                     {
                         for (int j = 0; j < dp[i]->numCourses; j++)
                         {
-                            printf("j is %d\ninputList[1] is %s and dp[%d]->courseName[%d] is %s\n", j, inputList[1], i, j, dp[i]->courseName[j]);
-                            printf("inputList[2] is %s and dp[%d]->masterFirstName[%d] is %s\n", inputList[2], i, j, dp[i]->masterFirstName[j]);
-                            printf("inputList[3] is %s and dp[%d]->masterLastName[%d] is %s\n", inputList[3], i, j, dp[i]->masterLastName[j]);
+                            //printf("j is %d\ninputList[1] is %s and dp[%d]->courseName[%d] is %s\n and strcmp is %d\n", j, inputList[1], i, j, dp[i]->courseName[j],strcmp(inputList[1],dp[i]->courseName[j]));
+                            //printf("inputList[2] is %s and dp[%d]->masterFirstName[%d] is %s\n and strcmp is %d\n", inputList[2], i, j, dp[i]->masterFirstName[j],strcmp(inputList[2],dp[i]->masterFirstName[j]));
+                            //printf("inputList[3] is %s and dp[%d]->masterLastName[%d] is %s\n and strcmp is %d\n", inputList[3], i, j, dp[i]->masterLastName[j],strcmp(inputList[3],dp[i]->masterLastName[j]));
                             if ((strcmp(inputList[1], dp[i]->courseName[j]) == 0) && (strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0) && (strcmp(inputList[3], dp[i]->masterLastName[j]) == 0))
                             {
                                 int haveThisCourse = 0;
+                                doesntExist=0;
                                 for (int k = 0; k < std[loginStudentIndex]->numCourses; k++)
                                 {
                                     if (strcmp(inputList[1], std[loginStudentIndex]->courseName[k]) == 0)
@@ -766,6 +767,7 @@ int main()
                                     strcpy(std[loginStudentIndex]->masterLastName[j], inputList[3]);
                                     std[loginStudentIndex]->totalCredit += dp[i]->credit[j];
                                     dp[i]->registered[j]++;
+                                    printf("You're added to course successfully!\n");
                                 }
                                 i = depIndex;
                                 break;
