@@ -781,6 +781,65 @@ int main()
                 }
             }
         }
+
+        //remove-s
+        else if(strncmp(inputCpy,"remove-s",8)){
+            if(loginLevel!=1){
+                printf("You should login as a student to remove course!\n");
+            }
+            else if(index<2){
+                printf("Invalid inputs!\n");
+            }
+            else{
+                int isPassed=0;
+                for(int i=0;i<std[loginStudentIndex]->passNumCourses;i++){
+                    if(strcmp(std[loginStudentIndex]->passCourseName[i],inputList[1])==0){
+                        isPassed=1;
+                        break;
+                    }
+                }
+                int isPassing=0;
+                int courseIndex;
+                for(int i=0;i<std[loginStudentIndex]->numCourses;i++){
+                    if(strcmp(std[loginStudentIndex]->courseName[i],inputList[1])){
+                        alreadyHave=1;
+                        courseIndex=i;
+                        break;
+                    }
+                }
+                if(isPassed){
+                    printf("You have already had this course!\n");
+                }
+                else if(isPassing==0){
+                    printf("You don't belong to the student list of given course!\n");
+                }
+                else{
+                    for(int i=0;i<depIndex;i++){
+                        for(int j=0;j<dp[i]->numCourses;j++){
+                            if(strcmp(std[loginStudentIndex]->courseName[courseIndex],dp[i]->courseName[j])==0 && strcmp(std[loginStudentIndex]->masterFirstName[courseIndex],dp[i]->masterFirstName[j])==0 && strcmp(std[loginStudentIndex]->masterLastName[courseIndex],dp[i]->masterLastName[j])==0){
+                                dp[i]->registered[j]--;
+                                i=depIndex;
+                                break;
+                            }
+                        }
+                    }
+                    std[loginStudentIndex]->totalCredit-=std[loginStudentIndex]->credit[courseIndex];
+                    for(int i=courseIndex;i<std[loginStudentIndex]->numCourses-1;i++){
+                        strcpy(std[loginStudentIndex]->courseName[i],std[loginStudentIndex]->courseName[i+1]);
+                        strcpy(std[loginStudentIndex]->masterFirstName[i],std[loginStudentIndex]->masterFirstName[i+1]);
+                        strcpy(std[loginStudentIndex]->masterLastName[i],std[loginStudentIndex]->masterLastName[i+1]);
+                        std[loginStudentIndex]->masterID[i]=std[loginStudentIndex]->masterID[i+1];
+                        std[loginStudentIndex]->credit[i]=std[loginStudentIndex]->masterID[i+1];
+                    }
+                    std[loginStudentIndex]->numCourses--;
+
+
+                    printf("The course is removed from your chart successfully!\n");
+                }
+
+            }
+        }
+
         else
             printf("Invalid command!\n");
         // printf("previous input was %s. waiting to new input\n", input);
