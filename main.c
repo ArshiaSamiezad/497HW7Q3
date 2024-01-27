@@ -508,11 +508,10 @@ int main()
                         {
                             for (int k = 0; k < std[j]->numCourses; k++)
                             {
-                                if (strcmp(std[j]->courseName[k], inputList[1]) == 0)
+                                if ((strcmp(std[j]->courseName[k], inputList[1]) == 0) && loginID == std[j]->masterID[k])
                                 {
                                     doesntExist = 0;
-                                    std[j]->numCourses--;
-                                    std[j]->totalCredit-=std[j]->credit[k];
+                                    std[j]->totalCredit -= std[j]->credit[k];
                                     for (int l = k; l < std[j]->numCourses - 1; l++)
                                     {
                                         strcpy(std[j]->courseName[l], std[j]->courseName[l + 1]);
@@ -522,12 +521,14 @@ int main()
                                         strcpy(std[j]->masterLastName[l], std[j]->masterLastName[l + 1]);
                                         std[j]->masterID[l] = std[j]->masterID[l + 1];
                                     }
+                                    std[j]->numCourses--;
                                 }
                             }
                         }
-                        for(int j=i;j<mstr[loginMasterIndex]->numCourses-1;j++){
-                            mstr[loginMasterIndex]->depID[j]=mstr[loginMasterIndex]->depID[j+1];
-                            strcpy(mstr[loginMasterIndex]->courseName[j],mstr[loginMasterIndex]->courseName[j+1]);
+                        for (int j = i; j < mstr[loginMasterIndex]->numCourses - 1; j++)
+                        {
+                            mstr[loginMasterIndex]->depID[j] = mstr[loginMasterIndex]->depID[j + 1];
+                            strcpy(mstr[loginMasterIndex]->courseName[j], mstr[loginMasterIndex]->courseName[j + 1]);
                         }
                         mstr[loginMasterIndex]->numCourses--;
                         printf("Course deleted successfully!\n");
@@ -537,6 +538,7 @@ int main()
             else if (loginLevel == 3)
             {
                 doesntExist = 1;
+                int isInAnotherDep = 0;
                 inputList[3][strlen(inputList[3]) - 1] = '\0';
                 for (int i = 0; i < depIndex; i++)
                 {
@@ -547,6 +549,7 @@ int main()
                             if (i != loginDepIndex)
                             {
                                 printf("You can't delete another department's course!\n");
+                                isInAnotherDep = 1;
                                 i = depIndex;
                                 break;
                             }
@@ -565,12 +568,56 @@ int main()
                             doesntExist = 0;
                             dp[i]->numCourses--;
                             i = depIndex;
-                            printf("Course deleted successfully!\n");
+                        }
+                    }
+                }
+                if (isInAnotherDep == 0)
+                {
+                    for (int j = 0; j < stdIndex; j++)
+                    {
+                        for (int k = 0; k < std[j]->numCourses; k++)
+                        {
+                            if ((strcmp(std[j]->courseName[k], inputList[1]) == 0) && inputList[2] == std[j]->masterFirstName[k] && inputList[3] == std[j]->masterLastName[k])
+                            {
+                                doesntExist = 0;
+                                std[j]->totalCredit -= std[j]->credit[k];
+                                for (int l = k; l < std[j]->numCourses - 1; l++)
+                                {
+                                    strcpy(std[j]->courseName[l], std[j]->courseName[l + 1]);
+                                    std[j]->credit[l] = std[j]->credit[l + 1];
+
+                                    strcpy(std[j]->masterFirstName[l], std[j]->masterFirstName[l + 1]);
+                                    strcpy(std[j]->masterLastName[l], std[j]->masterLastName[l + 1]);
+                                    std[j]->masterID[l] = std[j]->masterID[l + 1];
+                                }
+                                std[j]->numCourses--;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < mstrIndex; i++)
+                    {
+                        if (strcmp(mstr[i]->firstName, inputList[2]) == 0 && strcmp(mstr[i]->lastName, inputList[3]) == 0)
+                        {
+                            for (int j = 0; j < mstr[i]->numCourses; j++)
+                            {
+                                if (strcmp(mstr[i]->courseName[j]) == 0)
+                                {
+                                    for (int k = j; k < mstr[i]->numCourses - 1; k++)
+                                    {
+                                        mstr[i]->depID[k] = mstr[i]->depID[k + 1];
+                                        strcpy(mstr[i]->courseName[k], mstr[i]->courseName[k + 1]);
+                                    }
+                                    mstr[i]->numCourses--;
+                                    printf("Course deleted successfully!\n");
+                                    break;
+                                }
+                            }
+                            break;
                         }
                     }
                 }
             }
-            else if (doesntExist)
+            else if (doesntExist && isInAnotherDep == 0)
             {
                 printf("Course does not exist\n");
             }
