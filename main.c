@@ -626,7 +626,8 @@ int main()
                     }
                 }
             }
-            else if (doesntExist && isInAnotherDep == 0)
+
+            if (doesntExist == 1 && isInAnotherDep == 0)
             {
                 printf("Course does not exist\n");
             }
