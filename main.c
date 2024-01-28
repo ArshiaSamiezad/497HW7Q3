@@ -460,7 +460,7 @@ int main()
                         }
                         else
                         {
-                            strcpy(dp[i]->courseName[dp[i]->numCourses], "");
+                            strcpy(dp[i]->coursePreend[dp[i]->numCourses], "");
                         }
                         dp[i]->numCourses++;
                         mstr[loginMasterIndex]->numCourses++;
@@ -550,16 +550,20 @@ int main()
             }
             else if (loginLevel == 3)
             {
+
                 isDelete = 0;
                 isInAnotherDep = 0;
                 doesntExist = 1;
 
                 for (int i = 0; i < depIndex; i++)
                 {
-                    for (int j = 0; j < dp[i]->numCourses; i++)
+                    // printf("numcourses is  %d\n", dp[i]->numCourses);
+                    for (int j = 0; j < dp[i]->numCourses; j++)
                     {
+                        // printf("dep[%d] courseNum[%d] is %s\n", i, j, dp[i]->courseName[j]);
                         if ((strcmp(dp[i]->courseName[j], inputList[1]) == 0) && (strcmp(dp[i]->masterFirstName[j], inputList[2]) == 0) && (strcmp(dp[i]->masterLastName[j], inputList[3]) == 0))
                         {
+
                             if (i != loginDepIndex)
                             {
                                 printf("You can't delete another department's course!\n");
@@ -567,21 +571,23 @@ int main()
                                 i = depIndex;
                                 break;
                             }
-                            for (int k = j; j < dp[i]->numCourses - 1; k++)
+                            for (int k = j; k < dp[i]->numCourses - 1; k++)
                             {
-                                strcpy(dp[i]->courseName[k], dp[i]->courseName[k + 1]);
-                                strcpy(dp[i]->coursePreend[k], dp[i]->coursePreend[k + 1]);
-                                dp[i]->credit[k] = dp[i]->credit[k + 1];
-                                dp[i]->capacity[k] = dp[i]->capacity[k + 1];
-                                dp[i]->registered[k] = dp[i]->registered[k + 1];
+                                strcpy(dp[loginDepIndex]->courseName[k], dp[loginDepIndex]->courseName[k + 1]);
+                                strcpy(dp[loginDepIndex]->coursePreend[k], dp[loginDepIndex]->coursePreend[k + 1]);
+                                dp[loginDepIndex]->credit[k] = dp[loginDepIndex]->credit[k + 1];
+                                dp[loginDepIndex]->capacity[k] = dp[loginDepIndex]->capacity[k + 1];
+                                dp[loginDepIndex]->registered[k] = dp[loginDepIndex]->registered[k + 1];
 
-                                strcpy(dp[i]->masterFirstName[k], dp[i]->masterFirstName[k + 1]);
-                                strcpy(dp[i]->masterLastName[k], dp[i]->masterLastName[k + 1]);
-                                dp[i]->masterID[k] = dp[i]->masterID[k + 1];
+                                strcpy(dp[loginDepIndex]->masterFirstName[k], dp[loginDepIndex]->masterFirstName[k + 1]);
+                                strcpy(dp[loginDepIndex]->masterLastName[k], dp[loginDepIndex]->masterLastName[k + 1]);
+                                dp[loginDepIndex]->masterID[k] = dp[loginDepIndex]->masterID[k + 1];
+                                // printf("Replaced %s with %s\n", dp[loginDepIndex]->courseName[k], dp[loginDepIndex]->courseName[k + 1]);
                             }
                             doesntExist = 0;
-                            dp[i]->numCourses--;
+                            dp[loginDepIndex]->numCourses--;
                             i = depIndex;
+                            break;
                         }
                     }
                 }
@@ -593,6 +599,7 @@ int main()
                         {
                             if ((strcmp(std[j]->courseName[k], inputList[1]) == 0) && inputList[2] == std[j]->masterFirstName[k] && inputList[3] == std[j]->masterLastName[k])
                             {
+
                                 doesntExist = 0;
                                 std[j]->totalCredit -= std[j]->credit[k];
                                 for (int l = k; l < std[j]->numCourses - 1; l++)
