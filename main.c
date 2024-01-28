@@ -158,6 +158,7 @@ int main()
                 std[stdIndex]->passNumCourses = 0;
                 std[stdIndex]->totalCredit = 0;
                 // inja badan check konam ke age dep vojood nadasht error bede ya na
+                int isInvalidDep = 1;
                 for (int i = 0; i < depIndex; i++)
                 {
                     if (dp[i]->depID == std[stdIndex]->depID)
@@ -167,43 +168,50 @@ int main()
                         strcpy(dp[i]->lastName[dp[i]->numStudents], std[stdIndex]->lastName);
                         dp[i]->ID[dp[i]->numStudents] = std[stdIndex]->ID;
                         dp[i]->numStudents++;
+                        isInvalidDep = 0;
                     }
                 }
-
-                fgets(input, 1000, stdin);
-                strcpy(inputCpy, input);
-                while (strcmp(input, "end\n"))
+                if (isInvalidDep)
                 {
-                    char *token[1000];
-
-                    token[0] = strtok(input, " \0\n");
-                    int indexStud = 0;
-                    while (inputList[indexStud])
-                    {
-                        indexStud++;
-                        token[indexStud] = strtok(NULL, " \0\n");
-                    }
-
-                    token[indexStud] = '\0';
-
-                    strcpy(std[stdIndex]->passCourseName[std[stdIndex]->passNumCourses], token[0]);
-                    std[stdIndex]->passMark[std[stdIndex]->passNumCourses] = atof(token[1]);
-                    std[stdIndex]->passCredit[std[stdIndex]->passNumCourses] = strtol(token[2], NULL, 10);
-
-                    std[stdIndex]->passNumCourses++;
+                    printf("Invalid department code!\n");
+                }
+                else if (isInvalidDep == 0)
+                {
                     fgets(input, 1000, stdin);
                     strcpy(inputCpy, input);
+                    while (strcmp(input, "end\n"))
+                    {
+                        char *token[1000];
+
+                        token[0] = strtok(input, " \0\n");
+                        int indexStud = 0;
+                        while (inputList[indexStud])
+                        {
+                            indexStud++;
+                            token[indexStud] = strtok(NULL, " \0\n");
+                        }
+
+                        token[indexStud] = '\0';
+
+                        strcpy(std[stdIndex]->passCourseName[std[stdIndex]->passNumCourses], token[0]);
+                        std[stdIndex]->passMark[std[stdIndex]->passNumCourses] = atof(token[1]);
+                        std[stdIndex]->passCredit[std[stdIndex]->passNumCourses] = strtol(token[2], NULL, 10);
+
+                        std[stdIndex]->passNumCourses++;
+                        fgets(input, 1000, stdin);
+                        strcpy(inputCpy, input);
+                    }
+                    float sumpassCredits = 0;
+                    float sumpassMarks = 0;
+                    for (int i = 0; i < std[stdIndex]->passNumCourses; i++)
+                    {
+                        sumpassCredits += std[stdIndex]->passCredit[i];
+                        sumpassMarks += std[stdIndex]->passMark[i] * std[stdIndex]->passCredit[i];
+                    }
+                    std[stdIndex]->gpa = (float)(sumpassMarks) / (float)(sumpassCredits);
+                    printf("Registered successfully!\n");
+                    stdIndex++;
                 }
-                float sumpassCredits = 0;
-                float sumpassMarks = 0;
-                for (int i = 0; i < std[stdIndex]->passNumCourses; i++)
-                {
-                    sumpassCredits += std[stdIndex]->passCredit[i];
-                    sumpassMarks += std[stdIndex]->passMark[i] * std[stdIndex]->passCredit[i];
-                }
-                std[stdIndex]->gpa = (float)(sumpassMarks) / (float)(sumpassCredits);
-                printf("Registered successfully!\n");
-                stdIndex++;
             }
         }
 
@@ -421,7 +429,7 @@ int main()
             }
         }
 
-        else if (strncmp(inputCpy, "create-course", 13) == 0)
+        else if (strcmp(inputList[0], "create-course") == 0)
         {
             if (loginLevel != 2)
             {
@@ -774,9 +782,10 @@ int main()
                                 }
                                 else
                                 {
-                                    strcpy(std[loginStudentIndex]->courseName[j], inputList[1]);
-                                    strcpy(std[loginStudentIndex]->masterFirstName[j], inputList[2]);
-                                    strcpy(std[loginStudentIndex]->masterLastName[j], inputList[3]);
+                                    strcpy(std[loginStudentIndex]->courseName[std[loginStudentIndex]->numCourses], inputList[1]);
+                                    strcpy(std[loginStudentIndex]->masterFirstName[std[loginStudentIndex]->numCourses], inputList[2]);
+                                    strcpy(std[loginStudentIndex]->masterLastName[std[loginStudentIndex]->numCourses], inputList[3]);
+                                    std[loginStudentIndex]->credit[std[loginStudentIndex]->numCourses] = dp[i]->credit[j];
                                     std[loginStudentIndex]->totalCredit += dp[i]->credit[j];
                                     std[loginStudentIndex]->numCourses++;
                                     dp[i]->registered[j]++;
@@ -960,6 +969,7 @@ int main()
                     int giveStudentNowIndex = -1;
                     for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
                     {
+                        // printf("%s is having %s\n", std[loginStudentIndex]->firstName, std[loginStudentIndex]->courseName[i + 1]);
                         if (strcmp(inputList[1], std[loginStudentIndex]->courseName[i]) == 0)
                         {
                             giveStudentNowIndex = i;
@@ -1053,6 +1063,96 @@ int main()
                     // else if(giveStudentPassIndex!=-1){
 
                     // }
+                }
+            }
+        }
+
+        // change group
+        else if (strcmp(inputList[0], "change-group") == 0)
+        {
+            if (loginLevel != 1)
+            {
+                printf("You should login as a student to change group!\n");
+            }
+            else if (index < 4)
+            {
+                printf("Invalid inputs!\n");
+            }
+            else
+            {
+                int courseIsFound = 0;
+                int masterIsFound = 0;
+                int courseStudentIndex = -1;
+                int courseDepIndex = -1;
+                int courseDepCourseIndex = -1;
+                int studentNowCourseIndex = -1;
+                int studentNowDepIndex = -1;
+
+                for (int i = 0; i < depIndex; i++)
+                {
+                    for (int j = 0; j < dp[i]->numCourses; j++)
+                    {
+                        if (strcmp(inputList[1], dp[i]->courseName[j]) == 0)
+                        {
+                            courseIsFound = 1;
+                        }
+                        if (strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0 && strcmp(inputList[3], dp[i]->masterLastName[j]) == 0)
+                        {
+                            masterIsFound = 1;
+                        }
+                        if (strcmp(inputList[1], dp[i]->courseName[j]) == 0 && strcmp(inputList[2], dp[i]->masterFirstName[j]) == 0 && strcmp(inputList[3], dp[i]->masterLastName[j]) == 0)
+                        {
+                            courseDepIndex = i;
+                            courseDepCourseIndex = j;
+                        }
+                    }
+                }
+                for (int i = 0; i < std[loginStudentIndex]->numCourses; i++)
+                {
+                    if (strcmp(inputList[1], std[loginStudentIndex]->courseName[i]) == 0)
+                    {
+                        courseStudentIndex = i;
+                    }
+                }
+
+                if (courseIsFound == 0)
+                {
+                    printf("This course doesn't exists!\n");
+                }
+                else if (masterIsFound == 0)
+                {
+                    printf("This master doesn't exists!\n");
+                }
+                else if (courseDepIndex == -1 && courseDepCourseIndex == -1)
+                {
+                    printf("This master doesn't present this course!\n");
+                }
+                else if (courseStudentIndex == -1)
+                {
+                    printf("You don't belong to the student list of given course!\n");
+                }
+
+                else
+                {
+                    for (int i = 0; i < depIndex; i++)
+                    {
+                        for (int j = 0; j < dp[i]->numCourses; j++)
+                        {
+                            if (strcmp(dp[i]->courseName[j], std[loginStudentIndex]->courseName[courseStudentIndex]) == 0)
+                            {
+                                studentNowCourseIndex = j;
+                                studentNowDepIndex = i;
+                                i = depIndex;
+                                break;
+                            }
+                        }
+                    }
+                    dp[studentNowDepIndex]->registered[studentNowCourseIndex]--;
+                    dp[courseDepIndex]->registered[courseDepCourseIndex]++;
+                    strcpy(std[loginStudentIndex]->masterFirstName[courseStudentIndex], inputList[2]);
+                    strcpy(std[loginStudentIndex]->masterLastName[courseStudentIndex], inputList[3]);
+                    std[loginStudentIndex]->masterID[courseStudentIndex] = dp[courseDepIndex]->masterID[courseDepCourseIndex];
+                    printf("Course group changed to %s group successfully!\n", dp[courseDepIndex]->masterLastName[courseDepCourseIndex]);
                 }
             }
         }
