@@ -474,8 +474,10 @@ int main()
         // delete course master
         else if (strncmp(inputCpy, "delete_course", 13) == 0)
         {
+            int isDelete = 0;
             int doesntExist = 1;
             int isInAnotherDep = 0;
+
             if (loginLevel == 1)
             { // ya loginLevel!=2
                 printf("You don't have access to delete this course!\n");
@@ -542,13 +544,16 @@ int main()
                         }
                         mstr[loginMasterIndex]->numCourses--;
                         printf("Course deleted successfully!\n");
+                        isDelete = 1;
                     }
                 }
             }
             else if (loginLevel == 3)
             {
+                isDelete = 0;
                 isInAnotherDep = 0;
                 doesntExist = 1;
+
                 for (int i = 0; i < depIndex; i++)
                 {
                     for (int j = 0; j < dp[i]->numCourses; i++)
@@ -618,6 +623,7 @@ int main()
                                     }
                                     mstr[i]->numCourses--;
                                     printf("Course deleted successfully!\n");
+                                    isDelete = 1;
                                     break;
                                 }
                             }
@@ -627,9 +633,13 @@ int main()
                 }
             }
 
-            if (doesntExist == 1 && isInAnotherDep == 0)
+            if (doesntExist == 1 && isInAnotherDep == 0 && loginLevel == 2 && isDelete == 0)
             {
                 printf("Course does not exist\n");
+            }
+            else if (doesntExist == 1 && isInAnotherDep == 0 && loginLevel == 3 && isDelete == 0)
+            {
+                printf("Course does not exist!\n");
             }
         }
 
@@ -647,42 +657,53 @@ int main()
                 float gpa3 = 0;
                 float gpa4 = 0;
                 float gpa5 = 0;
-                int indexgpa1 = 0;
-                int indexgpa2 = 0;
-                int indexgpa3 = 0;
-                int indexgpa4 = 0;
-                int indexgpa5 = 0;
+                int indexgpa1 = -1;
+                int indexgpa2 = -1;
+                int indexgpa3 = -1;
+                int indexgpa4 = -1;
+                int indexgpa5 = -1;
                 for (int i = 0; i < stdIndex; i++)
                 {
                     if (std[i]->depID == loginID)
                     {
+                        // printf("student %s %s gpa is %.2f\n", std[i]->firstName, std[i]->lastName, std[i]->gpa);
                         if (std[i]->gpa > gpa1)
                         {
                             gpa5 = gpa4;
+                            indexgpa5 = indexgpa4;
                             gpa4 = gpa3;
+                            indexgpa4 = indexgpa3;
                             gpa3 = gpa2;
+                            indexgpa3 = indexgpa2;
                             gpa2 = gpa1;
+                            indexgpa2 = indexgpa1;
                             gpa1 = std[i]->gpa;
                             indexgpa1 = i;
                         }
                         else if (std[i]->gpa > gpa2)
                         {
                             gpa5 = gpa4;
+                            indexgpa5 = indexgpa4;
                             gpa4 = gpa3;
+                            indexgpa4 = indexgpa3;
                             gpa3 = gpa2;
+                            indexgpa3 = indexgpa2;
                             gpa2 = std[i]->gpa;
                             indexgpa2 = i;
                         }
                         else if (std[i]->gpa > gpa3)
                         {
                             gpa5 = gpa4;
+                            indexgpa5 = indexgpa4;
                             gpa4 = gpa3;
+                            indexgpa4 = indexgpa3;
                             gpa3 = std[i]->gpa;
                             indexgpa3 = i;
                         }
                         else if (std[i]->gpa > gpa4)
                         {
                             gpa5 = gpa4;
+                            indexgpa5 = indexgpa4;
                             gpa4 = std[i]->gpa;
                             indexgpa4 = i;
                         }
@@ -693,11 +714,16 @@ int main()
                         }
                     }
                 }
-                printf("%s %s %.2f\n", std[indexgpa1]->firstName, std[indexgpa1]->lastName, gpa1);
-                printf("%s %s %.2f\n", std[indexgpa2]->firstName, std[indexgpa2]->lastName, gpa2);
-                printf("%s %s %.2f\n", std[indexgpa3]->firstName, std[indexgpa3]->lastName, gpa3);
-                printf("%s %s %.2f\n", std[indexgpa4]->firstName, std[indexgpa4]->lastName, gpa4);
-                printf("%s %s %.2f\n", std[indexgpa5]->firstName, std[indexgpa5]->lastName, gpa5);
+                if (indexgpa1 != -1)
+                    printf("%s %s %.2f\n", std[indexgpa1]->firstName, std[indexgpa1]->lastName, gpa1);
+                if (indexgpa2 != -1)
+                    printf("%s %s %.2f\n", std[indexgpa2]->firstName, std[indexgpa2]->lastName, gpa2);
+                if (indexgpa3 != -1)
+                    printf("%s %s %.2f\n", std[indexgpa3]->firstName, std[indexgpa3]->lastName, gpa3);
+                if (indexgpa4 != -1)
+                    printf("%s %s %.2f\n", std[indexgpa4]->firstName, std[indexgpa4]->lastName, gpa4);
+                if (indexgpa5 != -1)
+                    printf("%s %s %.2f\n", std[indexgpa5]->firstName, std[indexgpa5]->lastName, gpa5);
             }
         }
 
@@ -879,7 +905,7 @@ int main()
 
         else if (strncmp(inputCpy, "show-courses", 12) == 0)
         {
-            if (index < 2)
+            if (index < 2 || strcmp(inputList[1], "\0") == 0 || strcmp(inputList[1], " ") == 0)
             {
                 printf("Invalid inputs!\n");
             }
@@ -899,6 +925,7 @@ int main()
                 if (foundDep == 0)
                 {
                     printf("This department code is invalid!\n");
+                    printf("index is %d and inputlist[1] is %s\n", index, inputList[1]);
                 }
                 else
                 {
