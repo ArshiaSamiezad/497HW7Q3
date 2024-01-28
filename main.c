@@ -728,6 +728,15 @@ int main()
                                         break;
                                     }
                                 }
+                                for (int k = 0; k < std[loginStudentIndex]->passNumCourses; k++)
+                                {
+                                    if (strcmp(inputList[1], std[loginStudentIndex]->passCourseName[k]) == 0)
+                                    {
+                                        printf("You already have this course!\n");
+                                        i = depIndex + 1;
+                                        break;
+                                    }
+                                }
                                 if (i == depIndex + 1)
                                 {
                                     break;
@@ -902,7 +911,7 @@ int main()
             {
                 for (int i = 0; i < dp[loginDepIndex]->numCourses; i++)
                 {
-                    printf("%s %s %d\n", dp[loginDepIndex]->courseName[i], dp[loginDepIndex]->masterLastName, dp[loginDepIndex]->capacity[i] - dp[loginDepIndex]->registered[i]);
+                    printf("%s %s %d\n", dp[loginDepIndex]->courseName[i], dp[loginDepIndex]->masterLastName[i], dp[loginDepIndex]->capacity[i] - dp[loginDepIndex]->registered[i]);
                 }
             }
         }
@@ -923,14 +932,6 @@ int main()
                     for (int j = 0; j < dp[i]->numCourses; j++)
                     {
                         if (strcmp(dp[i]->courseName[j], inputList[1]) == 0)
-                        {
-                            giveCourseCourseIndex = j;
-                            giveCourseDepIndex = i;
-                        }
-                    }
-                    for (int j = 0; j < dp[i]->passNumCourses; j++)
-                    {
-                        if (strcmp(dp[i]->passCourseName[j], inputList[1]) == 0)
                         {
                             giveCourseCourseIndex = j;
                             giveCourseDepIndex = i;
@@ -1000,8 +1001,52 @@ int main()
                         }
                         else
                         {
-                            for(int i=0;i<std[loginStudentIndex]->numCourses;i++){
-                                
+                            int finalDepIndex = -1;
+                            int finalDepCourseIndex = -1;
+                            for (int i = 0; i < depIndex; i++)
+                            {
+                                for (int j = 0; j < dp[i]->numCourses; j++)
+                                {
+                                    if (strcmp(std[loginStudentIndex]->courseName[giveStudentNowIndex], dp[i]->courseName[j]) == 0 && strcmp(std[loginStudentIndex]->masterFirstName[giveStudentNowIndex], dp[i]->masterFirstName[j]) == 0 && strcmp(std[loginStudentIndex]->masterLastName[giveStudentNowIndex], dp[i]->masterLastName[j]) == 0)
+                                    {
+                                        for (int k = 0; k < std[friendIndex]->passNumCourses; k++)
+                                        {
+                                            if (strcmp(std[friendIndex]->passCourseName[k], dp[i]->coursePreend[j]) == 0)
+                                            {
+                                                finalDepIndex = i;
+                                                finalDepCourseIndex = j;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (finalDepCourseIndex == -1)
+                            {
+                                printf("Your friend hasn't pass preneeded courses yet!\n");
+                            }
+                            else
+                            {
+                                strcpy(std[friendIndex]->courseName[std[friendIndex]->numCourses], std[loginStudentIndex]->courseName[giveStudentNowIndex]);
+                                strcpy(std[friendIndex]->masterFirstName[std[friendIndex]->numCourses], std[loginStudentIndex]->masterFirstName[giveStudentNowIndex]);
+                                strcpy(std[friendIndex]->masterLastName[std[friendIndex]->numCourses], std[loginStudentIndex]->masterLastName[giveStudentNowIndex]);
+                                std[friendIndex]->masterID[std[friendIndex]->numCourses] = std[loginStudentIndex]->masterID[giveStudentNowIndex];
+                                std[friendIndex]->credit[std[friendIndex]->numCourses] = std[loginStudentIndex]->credit[giveStudentNowIndex];
+                                std[friendIndex]->totalCredit += std[friendIndex]->credit[std[friendIndex]->numCourses];
+                                std[friendIndex]->numCourses++;
+
+                                std[loginStudentIndex]->totalCredit -= std[loginStudentIndex]->credit[giveStudentNowIndex];
+                                for (int i = giveStudentNowIndex; i < std[loginStudentIndex]->numCourses - 1; i++)
+                                {
+                                    strcpy(std[loginStudentIndex]->courseName[i], std[loginStudentIndex]->courseName[i + 1]);
+                                    strcpy(std[loginStudentIndex]->masterFirstName[i], std[loginStudentIndex]->masterFirstName[i + 1]);
+                                    strcpy(std[loginStudentIndex]->masterLastName[i], std[loginStudentIndex]->masterLastName[i + 1]);
+                                    std[loginStudentIndex]->masterID[i] = std[loginStudentIndex]->masterID[i + 1];
+                                    std[loginStudentIndex]->credit[i] = std[loginStudentIndex]->credit[i + 1];
+                                }
+                                std[loginStudentIndex]->numCourses--;
+
+                                printf("Course transferd to %s %s successfully!\n", std[friendIndex]->firstName, std[friendIndex]->lastName);
                             }
                         }
                     }
