@@ -93,7 +93,8 @@ int main()
     int loginDepIndex;
     int loginMasterIndex;
 
-    while (strncmp(input, "exit", 4))
+
+    while (1)
     {
         char *inputList[1000];
 
@@ -108,10 +109,15 @@ int main()
         // printf("%d %s %s\n", index, inputList[0], inputList[1]);
         inputList[index - 1][strlen(inputList[index - 1]) - 1] = '\0';
 
+        if(strcmp(inputCpy, "exit\n") == 0 || strcmp(inputCpy, "exit") == 0){
+            break;
+        }
+
+
         // register department
-        if (strncmp(inputCpy, "register-d", 10) == 0)
+        if (strcmp(inputList[0], "register-d") == 0)
         {
-            if (inputCpy[11] == '-' || strlen(inputCpy) == 11 || strlen(inputCpy) == 12)
+            if (index<2)
             {
                 printf("Invalid inputs!\n");
             }
@@ -138,7 +144,7 @@ int main()
         }
 
         // register student
-        else if (strncmp(inputCpy, "register-s", 10) == 0)
+        else if (strcmp(inputList[0], "register-s") == 0)
         {
             if (index < 5)
             {
@@ -216,7 +222,7 @@ int main()
         }
 
         // register master
-        else if (strncmp(inputCpy, "register-m", 10) == 0)
+        else if (strcmp(inputList[0], "register-m") == 0)
         {
             if (index < 4)
             {
@@ -237,7 +243,7 @@ int main()
         }
 
         // login student
-        else if (strncmp(inputCpy, "login-s", 7) == 0)
+        else if (strcmp(inputList[0], "login-s") == 0)
         {
             if (loginLevel)
             {
@@ -285,7 +291,7 @@ int main()
         }
 
         // logout
-        else if (strncmp(inputCpy, "logout", 6) == 0)
+        else if (strcmp(inputList[0], "logout") == 0)
         {
             loginLevel = 0;
             strcpy(loginFirstName, "");
@@ -316,7 +322,7 @@ int main()
         }
 
         // show passed courses
-        else if (strncmp(inputCpy, "show-passed-courses", 19) == 0)
+        else if (strcmp(inputList[0], "show-passed-courses") == 0)
         {
             if (loginLevel != 1)
             {
@@ -332,7 +338,7 @@ int main()
         }
 
         // show total credits
-        else if (strncmp(inputCpy, "show-total-credits", 18) == 0)
+        else if (strcmp(inputList[0], "show-total-credits") == 0)
         {
             if (loginLevel != 1)
             {
@@ -350,7 +356,7 @@ int main()
         }
 
         // login department
-        else if (strncmp(inputCpy, "login-d", 7) == 0)
+        else if (strcmp(inputList[0], "login-d") == 0)
         {
             if (loginLevel)
             {
@@ -382,7 +388,7 @@ int main()
         }
 
         // login master
-        else if (strncmp(inputCpy, "login-m", 7) == 0)
+        else if (strcmp(inputList[0], "login-m") == 0)
         {
             if (loginLevel)
             {
@@ -429,6 +435,7 @@ int main()
             }
         }
 
+        //create course
         else if (strcmp(inputList[0], "create-course") == 0)
         {
             if (loginLevel != 2)
@@ -472,7 +479,7 @@ int main()
         }
 
         // delete course master
-        else if (strncmp(inputCpy, "delete_course", 13) == 0)
+        else if (strcmp(inputList[0], "delete_course") == 0)
         {
             int isDelete = 0;
             int doesntExist = 1;
@@ -651,7 +658,7 @@ int main()
         }
 
         // show-top-5
-        else if (strncmp(inputCpy, "show-top-5", 10) == 0)
+        else if (strcmp(inputList[0], "show-top-5") == 0)
         {
             if (loginLevel != 3)
             {
@@ -735,7 +742,7 @@ int main()
         }
 
         // add course student
-        else if (strncmp(inputCpy, "add-s", 5) == 0)
+        else if (strcmp(inputList[0], "add-s") == 0)
         {
             if (loginLevel != 1)
             {
@@ -839,7 +846,7 @@ int main()
         }
 
         // remove-s
-        else if (strncmp(inputCpy, "remove-s", 8) == 0)
+        else if (strcmp(inputList[0], "remove-s") == 0)
         {
             if (loginLevel != 1)
             {
@@ -910,7 +917,7 @@ int main()
             }
         }
 
-        else if (strncmp(inputCpy, "show-courses", 12) == 0)
+        else if (strcmp(inputList[0], "show-courses") == 0)
         {
             if (index < 2 || strcmp(inputList[1], "\0") == 0 || strcmp(inputList[1], " ") == 0)
             {
@@ -945,7 +952,7 @@ int main()
         }
 
         // show-d-courses
-        else if (strncmp(inputCpy, "show-d-courses", 14) == 0)
+        else if (strcmp(inputList[0], "show-d-courses") == 0)
         {
             if (loginLevel != 3)
             {
@@ -960,7 +967,8 @@ int main()
             }
         }
 
-        else if (strncmp(inputCpy, "give_course", 11) == 0)
+        //give course
+        else if (strcmp(inputList[0], "give_course") == 0)
         {
             if (loginLevel != 1)
             {
@@ -1197,6 +1205,8 @@ int main()
         // printf("previous input was %s. waiting to new input\n", input);
         fgets(input, 1000, stdin);
         strcpy(inputCpy, input);
+
+
     }
 }
 
